@@ -1,3 +1,4 @@
-import SongLoader from './SongLoader';
+import ApiController from 'ApiController';
 
-console.log(new SongLoader().hoi);
+let server = new ApiController();
+server.start(3000);
