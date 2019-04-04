@@ -1,15 +1,12 @@
 import bcrypt from "bcrypt";
+import Database from './Database';
 
-export default class AccountManager {
-    setDatabase(db) {
-        this.db = db;
-    }
-
+class AccountManager {
     async register(username, password) {
         if (username === '' || password === '') return false;
         try {
             let hash = await this.hash(password);
-            await this.db.none("insert into users(name, password) values ($1,$2)", [username, hash]);
+            await Database.registerUser(username, hash);
             return true;
         } catch (e) {
             return false;
@@ -18,19 +15,15 @@ export default class AccountManager {
 
     async login(username, password) {
         try {
-            let hash = await this.getUserHashedPassword(username);
+            let hash = await Database.getPasswordByUsername(username);
             let success = await this.passwordMatchesHash(password, hash.password);
             if (!success)
                 return false;
 
-            return this.db.one('select id from users where "name" = $1', username);
+            return await Database.getUserIdByName(username);
         } catch (e) {
             return false;
         }
-    }
-
-    async getUserHashedPassword(username) {
-        return await this.db.one('SELECT password FROM users WHERE "name" = $1', username);
     }
 
     async passwordMatchesHash(password, hash) {
@@ -53,3 +46,5 @@ export default class AccountManager {
         })
     }
 }
+
+export default new AccountManager();

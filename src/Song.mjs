@@ -1,4 +1,4 @@
-export default class Song {
+class Song {
     constructor(id, title, artist, thumbnail, color, duration, viewCount) {
         this.id = id;
         this.title = title;
@@ -19,3 +19,5 @@ export default class Song {
         return new Song(data.ytid, data.title, data.artist, data.thumbnail, data.color);
     }
 }
+
+export default Song;

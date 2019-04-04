@@ -6,23 +6,21 @@ import https from "https";
 import {homedir} from "os";
 import AccountManager from "./AccountManager";
 import YoutubeSearch from "./YoutubeSearch";
+import Database from "./Database";
 import Song from "./Song";
 
-export default class ApiController {
+class ApiController {
     constructor() {
         this.app = express();
         this.app.use(cors());
         this.app.use(bodyParser.json());
-
-        this.accountManager = new AccountManager();
-        this.youtubeSearch = new YoutubeSearch();
 
         this.setRoutes();
     }
 
     setRoutes() {
         this.app.post('/register/', async (req, res) => {
-            let success = await this.accountManager.register(req.body.user, req.body.password);
+            let success = await AccountManager.register(req.body.user, req.body.password);
             if (success) res.send("Success");
             else res.send("Fail");
         });
@@ -30,26 +28,27 @@ export default class ApiController {
             let query = req.params.query;
             if (!query) return;
 
-            let results = await this.youtubeSearch.search(query);
+            let results = await YoutubeSearch.search(query);
             let songResults = results.map(d => Song.fromSearchObject(d));
             res.send(songResults);
         });
-        this.secureRoute.post('/songs/', async (req, res) => {
-            res.send(data.map(d => Song.fromDbObject(d)));
+        this.secureRoute('/songs/', async (req, res, userId) => {
+            let songs = await Database.songsByUser(userId);
+            res.send(songs.map(d => Song.fromDbObject(d)));
         });
-        this.secureRoute.post('/save/:id', async (req, res) => {
+        this.secureRoute('/save/:id', async (req, res) => {
             res.send({success: true});
         });
-        this.secureRoute.post('/remove/:id', async (req, res) => {
+        this.secureRoute('/remove/:id', async (req, res) => {
             res.send({success: true});
         });
-        this.secureRoute.post('/await/:id', async (req, res) => {
+        this.secureRoute('/await/:id', async (req, res) => {
             res.send({loaded: ytId});
         });
-        this.secureRoute.get('/stream/:id', async (req, res) => {
+        this.app.get('/stream/:id', async (req, res) => {
             res.sendFile(fileName);
         });
-        this.secureRoute.get('/download/:id', async (req, res) => {
+        this.app.get('/download/:id', async (req, res) => {
             res.sendFile(fileName);
         });
     }
@@ -57,7 +56,7 @@ export default class ApiController {
     secureRoute(route, onVisit) {
         this.app.post(route, async (req, res) => {
             console.info('[SEC]', route, req.param, req.body);
-            let userId = (await this.accountManager.login(req.body.user, req.body.password)).id;
+            let userId = (await AccountManager.login(req.body.user, req.body.password)).id;
             if (!userId) return res.send('Not logged in');
 
             await onVisit(req, res, userId);
@@ -87,3 +86,5 @@ export default class ApiController {
         }
     }
 }
+
+export default new ApiController();

@@ -1,7 +1,7 @@
 import secrets from "../res/secrets.json";
 import youtubeSearch from "youtube-search";
 
-export default class YoutubeSearch {
+class YoutubeSearch {
     async search(query, category, maxResults = 30) {
         const key = secrets.apiKey;
 
@@ -43,3 +43,5 @@ export default class YoutubeSearch {
         });
     }
 }
+
+export default new YoutubeSearch();
