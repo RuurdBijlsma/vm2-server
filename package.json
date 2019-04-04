@@ -1,0 +1,26 @@
+{
+  "name": "vm2-server",
+  "version": "1.0.0",
+  "description": "Vue music 2 server",
+  "main": "src/index.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ruurdbijlsma/vm2-server.git"
+  },
+  "keywords": [
+    "VueMusic",
+    "2",
+    "server",
+    "music",
+    "streaming"
+  ],
+  "author": "Ruurd Bijlsma",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ruurdbijlsma/vm2-server/issues"
+  },
+  "homepage": "https://github.com/ruurdbijlsma/vm2-server#readme"
+}
