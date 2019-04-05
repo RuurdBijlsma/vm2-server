@@ -14,14 +14,14 @@ class SongLoader {
     }
 
     async getCachedSongInfo(ytId, includeUrl = false) {
-        let songInfo;
-        if (!includeUrl)
-            songInfo = Database.songById(ytId);
+        let songInfo = Database.songById(ytId);
 
         if (includeUrl || !songInfo) {
-            songInfo = await this.getCurrentSongInfo(ytId);
-            let {artist, title, thumbnail, duration, color} = songInfo;
-            await Database.addSong(ytId, artist, title, thumbnail, duration, color);
+            let updatedInfo = await this.getCurrentSongInfo(ytId);
+            let {artist, title, thumbnail, duration, color} = updatedInfo;
+            if (!songInfo)
+                await Database.addSong(ytId, artist, title, thumbnail, duration, color);
+            songInfo = updatedInfo;
         }
 
         if (!includeUrl)
