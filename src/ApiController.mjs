@@ -10,6 +10,9 @@ import Database from "./Database";
 import Song from "./Song";
 import SongLoader from "./SongLoader";
 
+import mississippi from 'mississippi';
+import request from 'request';
+
 class ApiController {
     constructor() {
         this.app = express();
@@ -45,9 +48,14 @@ class ApiController {
             await Database.removeUserSong(userId, req.params.id);
             res.send({success: true});
         });
-        this.secureRoute('/download/:id', async (req, res) => {
+        this.secureRoute('/info/:id', async (req, res) => {
             let songInfo = await SongLoader.getCachedSongInfo(req.params.id, true);
             res.send(songInfo);
+        });
+        this.app.get('/pipe/:url', async (req, res) => {
+            let url = req.params.url;
+
+            req.pipe(request.get(url)).pipe(res);
         });
     }
 
