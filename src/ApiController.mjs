@@ -8,6 +8,7 @@ import AccountManager from "./AccountManager";
 import YoutubeSearch from "./YoutubeSearch";
 import Database from "./Database";
 import Song from "./Song";
+import SongLoader from "./SongLoader";
 
 class ApiController {
     constructor() {
@@ -36,26 +37,23 @@ class ApiController {
             let songs = await Database.songsByUser(userId);
             res.send(songs.map(d => Song.fromDbObject(d)));
         });
-        this.secureRoute('/save/:id', async (req, res) => {
+        this.secureRoute('/save/:id', async (req, res, userId) => {
+            await SongLoader.addUserSong(userId, req.params.id);
             res.send({success: true});
         });
-        this.secureRoute('/remove/:id', async (req, res) => {
+        this.secureRoute('/remove/:id', async (req, res, userId) => {
+            await Database.removeUserSong(userId, req.params.id);
             res.send({success: true});
         });
-        this.secureRoute('/await/:id', async (req, res) => {
-            res.send({loaded: ytId});
-        });
-        this.app.get('/stream/:id', async (req, res) => {
-            res.sendFile(fileName);
-        });
-        this.app.get('/download/:id', async (req, res) => {
-            res.sendFile(fileName);
+        this.secureRoute('/download/:id', async (req, res) => {
+            let songInfo = await SongLoader.getCachedSongInfo(req.params.id, true);
+            res.send(songInfo);
         });
     }
 
     secureRoute(route, onVisit) {
         this.app.post(route, async (req, res) => {
-            console.info('[SEC]', route, req.param, req.body);
+            console.info('[SEC]', route, {get: req.params}, {post: req.body});
             let userId = (await AccountManager.login(req.body.user, req.body.password)).id;
             if (!userId) return res.send('Not logged in');
 

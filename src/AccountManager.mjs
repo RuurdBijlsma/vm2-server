@@ -15,12 +15,12 @@ class AccountManager {
 
     async login(username, password) {
         try {
-            let hash = await Database.getPasswordByUsername(username);
+            let hash = await Database.passwordByUsername(username);
             let success = await this.passwordMatchesHash(password, hash.password);
             if (!success)
                 return false;
 
-            return await Database.getUserIdByName(username);
+            return await Database.userIdByName(username);
         } catch (e) {
             return false;
         }

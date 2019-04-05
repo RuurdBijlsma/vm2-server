@@ -8,7 +8,6 @@ create table songs
   title       text not null,
   artist      text not null,
   thumbnail   text,
-  viewcount bigint,
   duration    integer,
   color       text
 );
@@ -18,7 +17,7 @@ create table users
   id       serial not null
     constraint user_pkey
       primary key,
-  name     text   not null,
+  name     text  unique not null,
   password text   not null
 );
 
@@ -35,4 +34,5 @@ create table usersongs
     primary key (userid, songid)
 );
 
-insert into users(name, password) values ('defaultuser','$2b$10$Sfwl73nC6OfobEvN.ETd..1q6KpLT9iFfh55BeL0g5ISPCGcF/Vi6')
+--password is hashed version of "defaultpass"
+insert into users(name, password) values ('defaultuser','$2b$10$DQSMmD8ejf41/7GwJyHG4OJs6eATcozR9qhnJHNXbxu8KezavYSvi')

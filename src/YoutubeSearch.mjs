@@ -3,7 +3,7 @@ import youtubeSearch from "youtube-search";
 
 class YoutubeSearch {
     async search(query, category, maxResults = 30) {
-        const key = secrets.apiKey;
+        const key = secrets.ytKey;
 
         return new Promise((resolve, error) => {
             const opts = {

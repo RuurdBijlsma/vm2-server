@@ -11,11 +11,10 @@
 * Before first run, execute `npm install` in the main directory to install the required packages
 * To run the server, execute `node main.js`
 * Point the client to the ip/domain of the server
-* Make sure ffmpeg is in path
-* Default user that gets created on db creation
+* Default user that gets created on db creation (for development)
 ```
 {
  	"user":"defaultuser",
- 	"password":"examplepassword"
+ 	"password":"defaultpass"
  }
  ```
