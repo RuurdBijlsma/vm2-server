@@ -43,31 +43,96 @@ class Database {
 
     async registerUser(username, hashedPassword) {
         try {
-            return await this.db.none("insert into users(name, password) values ($1,$2)", [username, hashedPassword]);
+            let lastUserId = (await this.db.one('select id from users order by id desc limit 1')).id;
+            await this.db.none("insert into users(id, name, password) values ($1,$2,$3)", [lastUserId + 1, username, hashedPassword]);
+            let lastPlaylistId = (await this.db.one('select id from playlists order by id desc limit 1')).id;
+            await this.db.none("insert into playlists(id, name, created) values ($1,$2,$3)", [lastPlaylistId + 1, 'favorites', new Date()]);
+            await this.db.none("insert into userplaylists(userid, playlistid) values ($1,$2)", [lastUserId + 1, lastPlaylistId + 1]);
+            return lastUserId + 1;
         } catch (e) {
             console.error("PG ERROR", e);
         }
     }
 
-    async songsByUser(userId) {
+    async getPlaylistsByUser(userId) {
         try {
-            return await this.db.any('select ytid, title, artist, duration, thumbnail, color from songs inner join usersongs on usersongs.songid = songs.ytid where userid = $1 order by added desc', userId);
+            return await this.db.any('select playlistid, name, created\n' +
+                'from playlists inner join userplaylists u on playlists.id = u.playlistid\n' +
+                'where userid = $1', userId);
         } catch (e) {
             console.error("PG ERROR", e);
         }
     }
 
-    async addUserSong(userId, ytId, date) {
+    async createPlaylist(userId, playlistName) {
+        // todo playlist name unique voor zelfde user requirement
         try {
-            return await this.db.none('INSERT INTO usersongs(userid, songid, added) VALUES ($1, $2, $3)', [userId, ytId, date]);
+            let lastPlaylistId = (await this.db.one('select id from playlists order by id desc limit 1')).id;
+            await this.db.none('INSERT INTO playlists(id, name, created) VALUES ($1, $2, $3)', [lastPlaylistId + 1, playlistName, new Date()]);
+            await this.db.none('INSERT INTO userplaylists(userid, playlistid) VALUES ($1, $2)', [userId, lastPlaylistId + 1]);
+            return lastPlaylistId + 1;
         } catch (e) {
             console.error("PG ERROR", e);
         }
     }
 
-    async removeUserSong(userId, ytId) {
+    async deletePlaylist(userId, playlistId) {
+        await this.db.none('delete\n' +
+            'from userplaylists\n' +
+            'where userid = $1\n' +
+            '  and playlistid = $2);', [userId, playlistId]);
+        //check for dangling play lists
+    }
+
+    async getPlaylistByName(userId, playlistName) {
         try {
-            return await this.db.none('delete from usersongs where userid=$1 and songid = $2', [userId, ytId]);
+            return await this.db.any('select ytid, title, artist, duration, thumbnail, color\n' +
+                'from songs\n' +
+                '         inner join playlistsongs p on songs.ytid = p.songid\n' +
+                '         inner join playlists p2 on p.playlistid = p2.id\n' +
+                '         inner join userplaylists u on p2.id = u.playlistid\n' +
+                'where userid = $1\n' +
+                '  and p2.name = $2\n' +
+                'order by added desc', [userId, playlistName]);
+        } catch (e) {
+            console.error("PG ERROR", e);
+        }
+    }
+
+    async getPlaylistById(userId, playlistId) {
+        try {
+            return await this.db.any('select ytid, title, artist, duration, thumbnail, color\n' +
+                'from songs\n' +
+                '         inner join playlistsongs p on songs.ytid = p.songid\n' +
+                '         inner join playlists p2 on p.playlistid = p2.id\n' +
+                '         inner join userplaylists u on p2.id = u.playlistid\n' +
+                'where userid = $1\n' +
+                '  and p2.id = $2\n' +
+                'order by added desc', [userId, playlistId]);
+        } catch (e) {
+            console.error("PG ERROR", e);
+        }
+    }
+
+    async addToPlaylist(userId, ytId, playlistId) {
+        try {
+            let owner = (await this.db.one('select userid from userplaylists where playlistid = $1', playlistId)).userid;
+            if (owner !== userId) // This user does not have rights to alter this playlist
+                return false;
+            await this.db.none('INSERT INTO playlistsongs(playlistId, songid, added) VALUES ($1, $2, $3)', [playlistId, ytId, new Date()]);
+            return true;
+        } catch (e) {
+            console.error("PG ERROR", e);
+        }
+    }
+
+    async removeFromPlaylist(userId, ytId, playlistId) {
+        try {
+            let owner = (await this.db.one('select userid from userplaylists where playlistid = $1', playlistId)).userid;
+            if (owner !== userId) // This user does not have rights to alter this playlist
+                return false;
+            await this.db.none('delete from playlistsongs where playlistid=$1 and songid = $2', [playlistId, ytId]);
+            return true;
         } catch (e) {
             console.error("PG ERROR", e);
         }

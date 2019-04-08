@@ -8,19 +8,20 @@ class SongLoader {
         this.youtubeBaseUrl = 'https://youtube.com/watch?v=';
     }
 
-    async addUserSong(userId, ytId) {
+    async addUserSong(userId, ytId, playlistId) {
         await this.getCachedSongInfo(ytId);
-        await Database.addUserSong(userId, ytId, new Date());
+        return await Database.addToPlaylist(userId, ytId, playlistId);
     }
 
     async getCachedSongInfo(ytId, includeUrl = false) {
-        let songInfo = Database.songById(ytId);
+        let songInfo = await Database.songById(ytId);
 
         if (includeUrl || !songInfo) {
             let updatedInfo = await this.getCurrentSongInfo(ytId);
             let {artist, title, thumbnail, duration, color} = updatedInfo;
-            if (!songInfo)
+            if (!songInfo) {
                 await Database.addSong(ytId, artist, title, thumbnail, duration, color);
+            }
             songInfo = updatedInfo;
         }
 
@@ -38,7 +39,7 @@ class SongLoader {
             return dbSongInfo;
         }
 
-        let lastFmInfo = await this.getLastFmInfo(songInfo.fullName);
+        let lastFmInfo = await this.getLastFmInfo(songInfo.fullName, songInfo.thumbnail);
 
         delete songInfo.fullName;
 
@@ -72,13 +73,12 @@ class SongLoader {
         let duration = ytInfo.videoTimeSec;
         let artist = 'Unknown';
         let title = ytInfo.videoName;
-        let thumbnail = '';
+        let thumbnail = ytInfo.videoThumbList[ytInfo.videoThumbList.length - 1].url;
 
         let info = title.split('-');
         if (info.length > 1) {
             artist = info[0];
             title = info.slice(1).join('-');
-            thumbnail = ytInfo.videoThumbList[ytInfo.videoThumbList.length - 1].url;
         }
 
         return {fullName: ytInfo.videoName, artist, title, thumbnail, duration, url};
@@ -92,8 +92,6 @@ class SongLoader {
         let artist = lastFmInfo[0].artist;
         let title = lastFmInfo[0].name;
         let thumbnail = lastFmInfo[0].image.find(i => i.size === 'extralarge')['#text'];
-        if (!thumbnail)
-            thumbnail = ytInfo.videoThumbList[ytInfo.videoThumbList.length - 1].url;
 
         return {artist, title, thumbnail};
     }

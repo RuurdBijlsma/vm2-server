@@ -2,7 +2,7 @@ import secrets from "../res/secrets.json";
 import youtubeSearch from "youtube-search";
 
 class YoutubeSearch {
-    async search(query, category, maxResults = 30) {
+    async search(query, category, maxResults = 50) {
         const key = secrets.ytKey;
 
         return new Promise((resolve, error) => {

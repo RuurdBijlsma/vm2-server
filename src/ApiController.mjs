@@ -34,17 +34,33 @@ class ApiController {
             let songResults = results.map(d => Song.fromSearchObject(d));
             res.send(songResults);
         });
-        this.secureRoute('/songs/', async (req, res, userId) => {
-            let songs = await Database.songsByUser(userId);
+        this.secureRoute('/playlists/', async (req, res, userId) => {
+            let playlists = await Database.getPlaylistsByUser(userId);
+            res.send(playlists);
+        });
+        this.secureRoute('/createPlaylist/:playlistName', async (req, res, userId) => {
+            await Database.createPlaylist(userId, req.params.playlistName);
+            res.send({success: true});
+        });
+        this.secureRoute('/deletePlaylist/:playlistId', async (req, res, userId) => {
+            await Database.deletePlaylist(userId, req.params.playlistId);
+            res.send({success: true});
+        });
+        this.secureRoute('/songs/:playlistId', async (req, res, userId) => {
+            let songs = await Database.getPlaylistById(userId, req.params.playlistId);
             res.send(songs.map(d => Song.fromDbObject(d)));
         });
-        this.secureRoute('/save/:id', async (req, res, userId) => {
-            await SongLoader.addUserSong(userId, req.params.id);
-            res.send({success: true});
+        this.secureRoute('/favorites/', async (req, res, userId) => {
+            let songs = await Database.getPlaylistByName(userId, 'favorites');
+            res.send(songs.map(d => Song.fromDbObject(d)));
         });
-        this.secureRoute('/remove/:id', async (req, res, userId) => {
-            await Database.removeUserSong(userId, req.params.id);
-            res.send({success: true});
+        this.secureRoute('/save/:ytId/:playlistId', async (req, res, userId) => {
+            let result = await SongLoader.addUserSong(userId, req.params.ytId, req.params.playlistId);
+            res.send({success: result});
+        });
+        this.secureRoute('/remove/:ytId/:playlistId', async (req, res, userId) => {
+            let result = await Database.removeFromPlaylist(userId, req.params.ytId, req.params.playlistId);
+            res.send({success: result});
         });
         this.secureRoute('/info/:id', async (req, res) => {
             let songInfo = await SongLoader.getCachedSongInfo(req.params.id, true);
