@@ -39,19 +39,23 @@ class SongLoader {
             return dbSongInfo;
         }
 
-        let lastFmInfo = await this.getLastFmInfo(songInfo.fullName, songInfo.thumbnail);
+        console.log("FULL fullName: ", songInfo.fullName)
+        let lastFmInfo = await this.getLastFmInfo(songInfo.fullName);
 
-        delete songInfo.fullName;
 
         if (!lastFmInfo) return songInfo;
 
-        songInfo.artist = lastFmInfo.artist;
-        songInfo.title = lastFmInfo.title;
+        // If last fm info is completely different, use youtube info
+        if (songInfo.fullName.includes(lastFmInfo.artist))
+            songInfo.artist = lastFmInfo.artist;
+        if (songInfo.fullName.includes(lastFmInfo.title))
+            songInfo.title = lastFmInfo.title;
         if (lastFmInfo.thumbnail)
             songInfo.thumbnail = lastFmInfo.thumbnail;
 
         songInfo.color = await this.getThumbnailColor(songInfo.thumbnail);
 
+        delete songInfo.fullName;
         return songInfo;
     }
 

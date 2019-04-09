@@ -11,6 +11,10 @@ import Song from "./Song";
 import SongLoader from "./SongLoader";
 import request from 'request';
 
+//todo
+//when refreshing (after removing song oid) caching status gets removed
+// when quickly skipping thorugh search results some results load slower and overwrite the proper audio source
+
 class ApiController {
     constructor() {
         this.app = express();
