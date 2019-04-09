@@ -6,7 +6,7 @@ class AccountManager {
         if (username === '' || password === '') return false;
         try {
             let hash = await this.hash(password);
-            return await Database.registerUser(username, hash) === null;
+            return await Database.registerUser(username, hash);
         } catch (e) {
             return false;
         }

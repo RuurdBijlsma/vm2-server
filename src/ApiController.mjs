@@ -14,6 +14,7 @@ import request from 'request';
 //todo
 //when refreshing (after removing song oid) caching status gets removed
 // when quickly skipping thorugh search results some results load slower and overwrite the proper audio source
+// fix song title (remove [HD] (lyrics) (music video) etc.)
 
 class ApiController {
     constructor() {
@@ -26,13 +27,16 @@ class ApiController {
 
     setRoutes() {
         this.app.post('/register/', async (req, res) => {
-            let success = await AccountManager.register(req.body.user, req.body.password);
-            if (success) res.send("Success");
-            else res.send("Fail");
+            let userId = await AccountManager.register(req.body.user, req.body.password);
+            if (userId) res.send({success: true});
+            else res.send({success: false});
         });
         this.secureRoute('/search/:query', async (req, res) => {
             let query = req.params.query;
-            if (!query) return;
+            if (!query) {
+                res.send({success: false});
+                return;
+            }
 
             let results = await YoutubeSearch.search(query);
             let songResults = results.map(d => Song.fromSearchObject(d));

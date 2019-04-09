@@ -43,14 +43,23 @@ class Database {
 
     async registerUser(username, hashedPassword) {
         try {
-            let lastUserId = (await this.db.one('select id from users order by id desc limit 1')).id;
+            let lastUserId = 0,
+                lastPlaylistId = 0;
+            try {
+                lastUserId = (await this.db.one('select id from users order by id desc limit 1')).id
+            } catch (e) {
+            }
             await this.db.none("insert into users(id, name, password) values ($1,$2,$3)", [lastUserId + 1, username, hashedPassword]);
-            let lastPlaylistId = (await this.db.one('select id from playlists order by id desc limit 1')).id;
+            try {
+                lastPlaylistId = (await this.db.one('select id from playlists order by id desc limit 1')).id;
+            } catch (e) {
+            }
             await this.db.none("insert into playlists(id, name, created) values ($1,$2,$3)", [lastPlaylistId + 1, 'favorites', new Date()]);
             await this.db.none("insert into userplaylists(userid, playlistid) values ($1,$2)", [lastUserId + 1, lastPlaylistId + 1]);
             return lastUserId + 1;
         } catch (e) {
             console.error("PG ERROR", e);
+            return false;
         }
     }
 

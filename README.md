@@ -16,5 +16,5 @@
 {
  	"user":"defaultuser",
  	"password":"defaultpass"
- }
+}
  ```
