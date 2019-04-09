@@ -1,5 +1,3 @@
-DROP TABLE IF EXISTS songs, users, usersongs;
-
 create table songs
 (
     ytid      text not null
@@ -36,7 +34,7 @@ create table playlists
         constraint playlists_pk
             primary key,
     name    text   not null,
-    created date
+    created timestamp
 );
 
 alter table playlists
@@ -59,12 +57,13 @@ alter table userplaylists
 
 create table playlistsongs
 (
-    playlistid integer not null
+    playlistid integer                              not null
         constraint playlistsongs_playlists_id_fk
             references playlists,
-    songid     text    not null
+    songid     text                                 not null
         constraint playlistsongs_songs_ytid_fk
             references songs,
+    added      timestamp default '1997-01-06'::date not null,
     constraint playlistsongs_pk
         primary key (playlistid, songid)
 );
@@ -72,9 +71,3 @@ create table playlistsongs
 alter table playlistsongs
     owner to ruurd;
 
-
-
---password is hashed version of "defaultpass"
-insert into users(name, password) values ('defaultuser','$2b$10$DQSMmD8ejf41/7GwJyHG4OJs6eATcozR9qhnJHNXbxu8KezavYSvi');
-insert into playlists(name) values ('favorites');
-insert into userplaylists(userid, playlistid) values(1,1);
