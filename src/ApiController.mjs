@@ -31,6 +31,9 @@ class ApiController {
             if (userId) res.send({success: true});
             else res.send({success: false});
         });
+        this.secureRoute('/login/', async (req, res) => {
+            res.send({success: true});
+        });
         this.secureRoute('/search/:query', async (req, res) => {
             let query = req.params.query;
             if (!query) {
@@ -85,7 +88,7 @@ class ApiController {
         this.app.post(route, async (req, res) => {
             console.info('[SEC]', route, {get: req.params}, {post: req.body});
             let userId = (await AccountManager.login(req.body.user, req.body.password)).id;
-            if (!userId) return res.send('Not logged in');
+            if (!userId) return res.send({success: 'Not logged in'});
 
             await onVisit(req, res, userId);
         });
