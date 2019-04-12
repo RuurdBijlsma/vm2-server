@@ -99,6 +99,7 @@ class ApiController {
             let basePath = '/etc/letsencrypt/live/rtc.ruurd.dev/';
             let keyPath = path.join(basePath, 'privkey.pem');
             let certPath = path.join(basePath, 'fullchain.pem');
+            console.log(keyPath, certPath);
             return {
                 key: fs.readFileSync(keyPath),
                 cert: fs.readFileSync(certPath),
