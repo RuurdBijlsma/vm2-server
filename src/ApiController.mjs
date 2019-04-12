@@ -96,10 +96,10 @@ class ApiController {
 
     static getHttpsCredentials() {
         try {
-            let certPath = path.join(homedir(), 'ruurd.dev-ssl-bundle');
+            let certPath = '/etc/letsencrypt/live/rtc.ruurd.dev/';
             return {
-                key: fs.readFileSync(path.join(certPath, 'private.key.pem')),
-                cert: fs.readFileSync(path.join(certPath, 'domain.cert.pem')),
+                key: fs.readFileSync(path.join(certPath, 'privkey.pem')),
+                cert: fs.readFileSync(path.join(certPath, 'fullchain.pem')),
             }
         } catch (e) {
             return false;
