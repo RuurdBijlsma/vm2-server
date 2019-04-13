@@ -6,7 +6,7 @@ class TitleFixer {
             'audio', 'cover', 'art', 'lyric', 'club', 'radio', 'edit', 'vocals'];
         //by order of priority
         this.titleArtistSplitters = ['-', '–', '↬'];
-        this.featuredArtistSplitter = ['ft.', ',', '&', 'vs', 'vs.'];
+        this.featuredArtistSplitter = ['ft.', ',', '&', 'vs', 'vs.','feat','feat.'];
     }
 
     getFeaturedArtists(artistString) {
