@@ -1,6 +1,5 @@
 import ApiController from './ApiController';
 import Database from "./Database";
-import TitleFixer from "./TitleFixer";
 import Commander from 'commander';
 
 Commander

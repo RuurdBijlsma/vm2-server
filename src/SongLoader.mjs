@@ -87,6 +87,7 @@ class SongLoader {
 
 
     async getLastFmInfo(name) {
+        console.log("Searching lastfm track for: ", name);
         let lastFmInfo = await LastFmApi.search(name);
         if (lastFmInfo.length === 0) return false;
 
