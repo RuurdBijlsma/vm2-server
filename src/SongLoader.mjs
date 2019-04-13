@@ -45,15 +45,6 @@ class SongLoader {
 
         if (!lastFmInfo) return songInfo;
 
-        // If last fm info is completely different, use youtube info
-        if (songInfo.fullName.includes(lastFmInfo.artist))
-            songInfo.artist = lastFmInfo.artist;
-        if (songInfo.fullName.includes(lastFmInfo.title))
-            songInfo.title = lastFmInfo.title;
-        if (songInfo.fullName.includes(lastFmInfo.title) && songInfo.fullName.includes(lastFmInfo.artist)) {
-            //last fm info seems correct
-            songInfo.fullName = lastFmInfo.artist + ' - ' + lastFmInfo.title;
-        }
         if (lastFmInfo.thumbnail)
             songInfo.thumbnail = lastFmInfo.thumbnail;
 
