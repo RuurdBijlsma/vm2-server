@@ -5,8 +5,8 @@ class TitleFixer {
             'music', 'lyrics', 'ultra', '4k', 'hd', '1080p', 'hq', 'edm',
             'audio', 'cover', 'art', 'lyric', 'club', 'radio', 'edit', 'vocals'];
         //by order of priority
-        this.titleArtistSplitters = ['-', '↬'];
-        this.featuredArtistSplitter = ['ft.', ',', '&', 'vs','vs.'];
+        this.titleArtistSplitters = ['-', '–', '↬'];
+        this.featuredArtistSplitter = ['ft.', ',', '&', 'vs', 'vs.'];
     }
 
     getFeaturedArtists(artistString) {
@@ -77,6 +77,8 @@ class TitleFixer {
                 }
         }
 
+        //remove emojiis
+        title = title.replace(/([\uE000-\uF8FF]|\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDDFF])/g, '');
         return title.trim();
     }
 }

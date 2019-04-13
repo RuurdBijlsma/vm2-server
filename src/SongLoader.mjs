@@ -40,9 +40,8 @@ class SongLoader {
             return dbSongInfo;
         }
 
-        console.log("FULL fullName: ", songInfo.fullName)
-        let lastFmInfo = await this.getLastFmInfo(songInfo.fullName);
-
+        console.log("FULL fullName: ", songInfo.fullName);
+        let lastFmInfo = await this.getLastFmInfo(songInfo.artist !== 'Unknown' ? songInfo.artist + ' - ' + songInfo.title : songInfo.title);
 
         if (!lastFmInfo) return songInfo;
 
