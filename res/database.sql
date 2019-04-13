@@ -1,13 +1,14 @@
 create table songs
 (
-    ytid      text not null
+    ytid      text                         not null
         constraint song_pkey
             primary key,
-    title     text not null,
-    artist    text not null,
+    title     text                         not null,
+    artist    text                         not null,
     thumbnail text,
     duration  integer,
-    color     text
+    color     text,
+    yttitle   text default 'FILL IN'::text not null
 );
 
 alter table songs

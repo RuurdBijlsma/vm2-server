@@ -2,6 +2,7 @@ import LastFmApi from "./LastFmApi";
 import horizon from "horizon-youtube-mp3";
 import Database from "./Database";
 import Vibrant from "node-vibrant";
+import TitleFixer from './TitleFixer';
 
 class SongLoader {
     constructor() {
@@ -18,9 +19,9 @@ class SongLoader {
 
         if (includeUrl || !songInfo) {
             let updatedInfo = await this.getCurrentSongInfo(ytId);
-            let {artist, title, thumbnail, duration, color} = updatedInfo;
+            let {artist, title, thumbnail, fullName, duration, color} = updatedInfo;
             if (!songInfo) {
-                await Database.addSong(ytId, artist, title, thumbnail, duration, color);
+                await Database.addSong(ytId, artist, title, fullName, thumbnail, duration, color);
             }
             songInfo = updatedInfo;
         }
@@ -50,12 +51,15 @@ class SongLoader {
             songInfo.artist = lastFmInfo.artist;
         if (songInfo.fullName.includes(lastFmInfo.title))
             songInfo.title = lastFmInfo.title;
+        if (songInfo.fullName.includes(lastFmInfo.title) && songInfo.fullName.includes(lastFmInfo.artist)) {
+            //last fm info seems correct
+            songInfo.fullName = lastFmInfo.artist + ' - ' + lastFmInfo.title;
+        }
         if (lastFmInfo.thumbnail)
             songInfo.thumbnail = lastFmInfo.thumbnail;
 
         songInfo.color = await this.getThumbnailColor(songInfo.thumbnail);
 
-        delete songInfo.fullName;
         return songInfo;
     }
 
@@ -75,15 +79,9 @@ class SongLoader {
 
         let url = sorted[0].url;
         let duration = ytInfo.videoTimeSec;
-        let artist = 'Unknown';
-        let title = ytInfo.videoName;
         let thumbnail = ytInfo.videoThumbList[ytInfo.videoThumbList.length - 1].url;
 
-        let info = title.split('-');
-        if (info.length > 1) {
-            artist = info[0];
-            title = info.slice(1).join('-');
-        }
+        let [artist, title] = TitleFixer.artistAndTitleFromYtTitle(ytInfo.videoName);
 
         return {fullName: ytInfo.videoName, artist, title, thumbnail, duration, url};
     }

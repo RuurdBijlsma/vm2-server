@@ -10,6 +10,7 @@ import Database from "./Database";
 import Song from "./Song";
 import SongLoader from "./SongLoader";
 import request from 'request';
+import TitleFixer from './TitleFixer';
 
 //todo
 //when refreshing (after removing song oid) caching status gets removed
@@ -77,6 +78,14 @@ class ApiController {
             let songInfo = await SongLoader.getCachedSongInfo(req.params.id, true);
             res.send(songInfo);
         });
+        this.secureRoute('/artists/:playlistId', async (req, res) => {
+            let artists = await Database.distinctArtists(req.params.playlistId);
+            res.send(artists);
+        });
+        this.secureRoute('/artistSongs/:artist', async (req, res) => {
+            let songs = await Database.artistSongs(req.params.artist);
+            res.send(songs);
+        });
         this.app.get('/pipe/:url', async (req, res) => {
             let url = req.params.url;
 
@@ -101,7 +110,7 @@ class ApiController {
                 cert: fs.readFileSync('/etc/letsencrypt/live/rtc.ruurd.dev/fullchain.pem'),
             }
         } catch (e) {
-            console.log("HTTPS READ ERROR: ", e);
+            // console.log("HTTPS READ ERROR: ", e);
             return false;
         }
     }
