@@ -1,3 +1,5 @@
+drop table if exists playlistsongs, userplaylists, songs, playlists, users;
+
 create table songs
 (
     ytid      text                         not null
