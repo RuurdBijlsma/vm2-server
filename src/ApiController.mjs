@@ -13,9 +13,6 @@ import request from 'request';
 import TitleFixer from './TitleFixer';
 
 //todo
-//when refreshing (after removing song oid) caching status gets removed
-// when quickly skipping thorugh search results some results load slower and overwrite the proper audio source
-// fix song title (remove [HD] (lyrics) (music video) etc.)
 
 class ApiController {
     constructor() {
