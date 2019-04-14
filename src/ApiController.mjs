@@ -13,6 +13,7 @@ import request from 'request';
 import TitleFixer from './TitleFixer';
 
 //todo
+// Config file met of registeren open moet zijn of niet
 
 class ApiController {
     constructor() {
