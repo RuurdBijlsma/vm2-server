@@ -3,14 +3,12 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import fs from "fs";
 import https from "https";
-import {homedir} from "os";
 import AccountManager from "./AccountManager";
 import YoutubeSearch from "./YoutubeSearch";
 import Database from "./Database";
 import Song from "./Song";
 import SongLoader from "./SongLoader";
 import request from 'request';
-import TitleFixer from './TitleFixer';
 
 //todo
 // Config file met of registeren open moet zijn of niet
