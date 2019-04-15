@@ -24,6 +24,12 @@ class ApiController {
 
     setRoutes() {
         this.app.post('/register/', async (req, res) => {
+            let whitelist = ['rutenl'];
+            if (!(whitelist.map(l => l.toLowerCase()).includes(req.body.user.toLowerCase()))) {
+                res.send({success: false});
+                return;
+            }
+
             let userId = await AccountManager.register(req.body.user, req.body.password);
             if (userId) res.send({success: true});
             else res.send({success: false});
