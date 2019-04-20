@@ -86,7 +86,7 @@ class ApiController {
         });
         this.secureRoute('/artistSongs/:artist', async (req, res) => {
             let songs = await Database.artistSongs(req.params.artist);
-            res.send(songs);
+            res.send(songs.map(d => Song.fromDbObject(d)));
         });
         this.app.get('/pipe/:url', async (req, res) => {
             let url = req.params.url;

@@ -151,13 +151,18 @@ class Database {
         }
     }
 
-    async artistSongs(artist){
+    async artistSongs(artist) {
         try {
-            return await this.db.any(
+            let songs = await this.db.any(
                 "select *\n" +
                 "from songs\n" +
                 "where lower(artist) like '%' || lower($1) || '%'", artist
             );
+            let distinctSongs = [];
+            for (let song of songs)
+                if (distinctSongs.findIndex(s => s.title === song.title) === -1)
+                    distinctSongs.push(song);
+            return distinctSongs;
         } catch (e) {
             console.error("PG ERROR", e);
         }
