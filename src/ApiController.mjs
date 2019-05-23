@@ -89,9 +89,13 @@ class ApiController {
             res.send(songs.map(d => Song.fromDbObject(d)));
         });
         this.app.get('/pipe/:url', async (req, res) => {
-            let url = req.params.url;
+            try {
+                let url = req.params.url;
 
-            req.pipe(request.get(url)).pipe(res);
+                req.pipe(request.get(url)).pipe(res);
+            } catch (ignored) {
+                //ignored
+            }
         });
     }
 
