@@ -112,8 +112,8 @@ class ApiController {
     static getHttpsCredentials() {
         try {
             return {
-                key: fs.readFileSync('/etc/letsencrypt/live/rtc.ruurd.dev/privkey.pem'),
-                cert: fs.readFileSync('/etc/letsencrypt/live/rtc.ruurd.dev/fullchain.pem'),
+                key: fs.readFileSync('/etc/letsencrypt/live/ruurd.dev/privkey.pem'),
+                cert: fs.readFileSync('/etc/letsencrypt/live/ruurd.dev/fullchain.pem'),
             }
         } catch (e) {
             // console.log("HTTPS READ ERROR: ", e);
