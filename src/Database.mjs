@@ -1,6 +1,6 @@
 import secrets from "../res/secrets.json";
 import pg_promise from "pg-promise";
-import TitleFixer from "./TitleFixer";
+import TitleFixer from "./TitleFixer.mjs";
 
 const pgp = pg_promise();
 

@@ -1,6 +1,6 @@
 import secrets from "../res/secrets.json";
 import youtubeSearch from "youtube-search";
-import TitleFixer from "./TitleFixer";
+import TitleFixer from "./TitleFixer.mjs";
 
 class YoutubeSearch {
     decodeEntities(encodedString) {

@@ -4,7 +4,7 @@
   "description": "Vue music 2 server",
   "main": "src/index.mjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node --experimental-modules src/index.mjs"
   },
   "repository": {
     "type": "git",
@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/ruurdbijlsma/vm2-server#readme",
   "dependencies": {
-    "bcrypt": "^3.0.5",
+    "bcrypt": "^3.0.6",
     "body-parser": "^1.18.3",
     "commander": "^2.20.0",
     "cors": "^2.8.5",

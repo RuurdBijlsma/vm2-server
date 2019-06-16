@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import Database from './Database';
+import Database from './Database.mjs';
 
 class AccountManager {
     async register(username, password) {

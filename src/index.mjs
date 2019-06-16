@@ -1,5 +1,5 @@
-import ApiController from './ApiController';
-import Database from "./Database";
+import ApiController from './ApiController.mjs';
+import Database from "./Database.mjs";
 import Commander from 'commander';
 
 Commander

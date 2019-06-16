@@ -1,8 +1,8 @@
-import LastFmApi from "./LastFmApi";
+import LastFmApi from "./LastFmApi.mjs";
 import horizon from "horizon-youtube-mp3";
-import Database from "./Database";
+import Database from "./Database.mjs";
 import Vibrant from "node-vibrant";
-import TitleFixer from './TitleFixer';
+import TitleFixer from './TitleFixer.mjs';
 
 class SongLoader {
     constructor() {

@@ -3,11 +3,11 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import fs from "fs";
 import https from "https";
-import AccountManager from "./AccountManager";
-import YoutubeSearch from "./YoutubeSearch";
-import Database from "./Database";
-import Song from "./Song";
-import SongLoader from "./SongLoader";
+import AccountManager from "./AccountManager.mjs";
+import YoutubeSearch from "./YoutubeSearch.mjs";
+import Database from "./Database.mjs";
+import Song from "./Song.mjs";
+import SongLoader from "./SongLoader.mjs";
 import request from 'request';
 
 //todo
