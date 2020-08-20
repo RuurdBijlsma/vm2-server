@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/ruurdbijlsma/vm2-server#readme",
   "dependencies": {
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.18.3",
     "commander": "^2.20.0",
     "cors": "^2.8.5",
