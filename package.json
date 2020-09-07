@@ -29,7 +29,7 @@
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "horizon-youtube-mp3": "^1.9.1",
-    "http-proxy": "^1.17.0",
+    "http-proxy": "^1.18.1",
     "mississippi": "^4.0.0",
     "node-vibrant": "^3.2.0-alpha",
     "pg-promise": "^8.6.4",
