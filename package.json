@@ -24,10 +24,10 @@
   "homepage": "https://github.com/ruurdbijlsma/vm2-server#readme",
   "dependencies": {
     "bcrypt": "^3.0.6",
-    "body-parser": "^1.18.3",
+    "body-parser": "^1.20.1",
     "commander": "^2.20.0",
     "cors": "^2.8.5",
-    "express": "^4.16.4",
+    "express": "^4.18.2",
     "horizon-youtube-mp3": "^1.9.1",
     "http-proxy": "^1.17.0",
     "mississippi": "^4.0.0",
