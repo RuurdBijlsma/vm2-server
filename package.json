@@ -27,7 +27,7 @@
     "body-parser": "^1.18.3",
     "commander": "^2.20.0",
     "cors": "^2.8.5",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "horizon-youtube-mp3": "^1.9.1",
     "http-proxy": "^1.17.0",
     "mississippi": "^4.0.0",
